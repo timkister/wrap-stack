@@ -7,6 +7,7 @@ struct WrapStack<Content: View>: View {
   let verticalAlignment: VerticalAlignment!
   let horizontalAlignment: HorizontalAlignment!
   let spacing: CGFloat
+  let laneSpacing: CGFloat?
   let content: [Content]
   
   private let directionHorizontal: Bool
@@ -14,12 +15,13 @@ struct WrapStack<Content: View>: View {
   private let totalLanes: Int
   private let limits: [Int]
 
-  init(width: CGFloat? = nil, height: CGFloat? = nil, verticalAlignment: VerticalAlignment? = nil, horizontalAlignment: HorizontalAlignment? = nil, spacing: CGFloat, content: [Content]) {
+  init(width: CGFloat? = nil, height: CGFloat? = nil, verticalAlignment: VerticalAlignment? = nil, horizontalAlignment: HorizontalAlignment? = nil, spacing: CGFloat, laneSpacing: CGFloat?, content: [Content]) {
     self.width = width
     self.height = height
     self.verticalAlignment = verticalAlignment
     self.horizontalAlignment = horizontalAlignment
     self.spacing = spacing
+    self.laneSpacing = laneSpacing
     self.content = content
     let directionHorizontal = width != nil
     let length = directionHorizontal ? width! : height!
@@ -88,11 +90,11 @@ struct WrapStack<Content: View>: View {
   var body: some View {
     Group {
       if directionHorizontal {
-        VStack {
+        VStack(spacing: laneSpacing) {
           lanes
         }
       } else {
-        HStack {
+        HStack(spacing: laneSpacing) {
           lanes
         }
       }

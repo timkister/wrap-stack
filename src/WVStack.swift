@@ -4,32 +4,34 @@ public struct WVStack: View {
 
   @usableFromInline var alignment: HorizontalAlignment = .center
   @usableFromInline var spacing: CGFloat = 0
+  @usableFromInline var columnSpacing: CGFloat?
   @usableFromInline let content: [AnyView]
   @State private var width: CGFloat = 0
 
   
-  @usableFromInline init(_ alignment: HorizontalAlignment?, _ spacing: CGFloat?, _ content: [AnyView]) {
+  @usableFromInline init(_ alignment: HorizontalAlignment?, _ spacing: CGFloat?, _ columnSpacing: CGFloat?, _ content: [AnyView]) {
     if let alignment = alignment {
       self.alignment = alignment
     }
     if let spacing = spacing {
       self.spacing = spacing
     }
+    self.columnSpacing = columnSpacing
     self.content = content
   }
   
   // Work-around for https://bugs.swift.org/browse/SR-11628
-  @inlinable public init<Content: View>(alignment: HorizontalAlignment? = nil, spacing: CGFloat? = nil, content: () -> Content) {
-    self.init(alignment, spacing, [AnyView(content())])
+  @inlinable public init<Content: View>(alignment: HorizontalAlignment? = nil, spacing: CGFloat? = nil, columnSpacing: CGFloat? = nil, content: () -> Content) {
+    self.init(alignment, spacing, columnSpacing, [AnyView(content())])
   }
   
-  @inlinable public init<Content: View>(alignment: HorizontalAlignment? = nil, spacing: CGFloat? = nil, content: () -> [Content]) {
-    self.init(alignment, spacing, content().map { AnyView($0) })
+  @inlinable public init<Content: View>(alignment: HorizontalAlignment? = nil, spacing: CGFloat? = nil, columnSpacing: CGFloat? = nil, content: () -> [Content]) {
+    self.init(alignment, spacing, columnSpacing, content().map { AnyView($0) })
   }
   
   // Known issue: https://bugs.swift.org/browse/SR-11628
-  @inlinable public init(alignment: HorizontalAlignment? = nil, spacing: CGFloat? = nil, @ViewArrayBuilder content: () -> [AnyView]) {
-    self.init(alignment, spacing, content())
+  @inlinable public init(alignment: HorizontalAlignment? = nil, spacing: CGFloat? = nil, columnSpacing: CGFloat? = nil, @ViewArrayBuilder content: () -> [AnyView]) {
+    self.init(alignment, spacing, columnSpacing, content())
   }
 
   public var body: some View {
@@ -38,6 +40,7 @@ public struct WVStack: View {
         height: p.frame(in: .global).height,
         horizontalAlignment: self.alignment,
         spacing: self.spacing,
+        laneSpacing: self.columnSpacing,
         content: self.content
       )
       .anchorPreference(
