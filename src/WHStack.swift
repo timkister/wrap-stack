@@ -1,64 +1,93 @@
 import SwiftUI
 
 public struct WHStack: View {
-  
-  @usableFromInline var alignment: VerticalAlignment = .center
-  @usableFromInline var spacing: CGFloat = 0
+  @usableFromInline var alignment: VerticalAlignment
+  @usableFromInline var spacing: CGFloat
   @usableFromInline var rowSpacing: CGFloat?
   @usableFromInline let content: [AnyView]
   @State private var height: CGFloat = 0
   
-  @usableFromInline init(_ alignment: VerticalAlignment?, _ spacing: CGFloat?, _ rowSpacing: CGFloat?, _ content: [AnyView]) {
-    if let alignment = alignment {
-      self.alignment = alignment
-    }
-    if let spacing = spacing {
-      self.spacing = spacing
-    }
+  @usableFromInline init(
+    alignment: VerticalAlignment?,
+    spacing: CGFloat?,
+    rowSpacing: CGFloat?,
+    content: [AnyView]
+  ) {
+    self.alignment = alignment ?? .center
+    self.spacing = spacing ?? 0
     self.rowSpacing = rowSpacing
     self.content = content
   }
 
   // Work-around for https://bugs.swift.org/browse/SR-11628
-  @inlinable public init<Content: View>(alignment: VerticalAlignment? = nil, spacing: CGFloat? = nil, rowSpacing: CGFloat? = nil, content: () -> Content) {
-    self.init(alignment, spacing, rowSpacing, [AnyView(content())])
+  @inlinable public init<Content: View>(
+    alignment: VerticalAlignment? = nil,
+    spacing: CGFloat? = nil,
+    rowSpacing: CGFloat? = nil,
+    content: () -> Content
+  ) {
+    self.init(
+      alignment: alignment,
+      spacing: spacing,
+      rowSpacing: rowSpacing,
+      content: [AnyView(content())]
+    )
   }
 
-  @inlinable public init<Content: View>(alignment: VerticalAlignment? = nil, spacing: CGFloat? = nil, rowSpacing: CGFloat? = nil, content: () -> [Content]) {
-    self.init(alignment, spacing, rowSpacing, content().map { AnyView($0) })
+  @inlinable public init<Content: View>(
+    alignment: VerticalAlignment? = nil,
+    spacing: CGFloat? = nil,
+    rowSpacing: CGFloat? = nil,
+    content: () -> [Content]
+  ) {
+    self.init(
+      alignment: alignment,
+      spacing: spacing,
+      rowSpacing: rowSpacing,
+      content: content().map { AnyView($0) }
+    )
   }
   
   // Known issue: https://bugs.swift.org/browse/SR-11628
-  @inlinable public init(alignment: VerticalAlignment? = nil, spacing: CGFloat? = nil, rowSpacing: CGFloat? = nil, @ViewArrayBuilder content: () -> [AnyView]) {
-    self.init(alignment, spacing, rowSpacing, content())
+  @inlinable public init(
+    alignment: VerticalAlignment? = nil,
+    spacing: CGFloat? = nil,
+    rowSpacing: CGFloat? = nil,
+    @ViewArrayBuilder content: () -> [AnyView]
+  ) {
+    self.init(
+      alignment: alignment,
+      spacing: spacing,
+      rowSpacing: rowSpacing,
+      content: content()
+    )
   }
   
   public var body: some View {
     GeometryReader { p in
       WrapStack (
         width: p.frame(in: .global).width,
-        verticalAlignment: self.alignment,
-        spacing: self.spacing,
-        laneSpacing: self.rowSpacing,
-        content: self.content
+        verticalAlignment: alignment,
+        spacing: spacing,
+        laneSpacing: rowSpacing,
+        content: content
       )
-        .anchorPreference(
-          key: SizePref.self,
-          value: .bounds,
-          transform: {
-            p[$0].size
+      .anchorPreference(
+        key: SizePref.self,
+        value: .bounds,
+        transform: {
+          p[$0].size
         }
       )
     }
     .frame(height: height)
-    .onPreferenceChange(SizePref.self, perform: {
-      self.height = $0.height
-    })
+    .onPreferenceChange(SizePref.self) {
+      height = $0.height
+    }
   }
 }
 
 struct WHStack_Previews: PreviewProvider {
-  
   @ViewArrayBuilder static func single() -> [AnyView] {
     Color.purple.frame(width: 50, height: 50)
   }
@@ -79,7 +108,6 @@ struct WHStack_Previews: PreviewProvider {
           }
         }
         Group {
-          
           // FIXME: https://bugs.swift.org/browse/SR-11628
           WHStack(content: single)
           
@@ -164,7 +192,6 @@ struct WHStack_Previews: PreviewProvider {
             Color.white.frame(width: 50, height: 50)
           }
         }
-        
         
         Group {
           WHStack(alignment: .bottom, spacing: 10) {[
