@@ -2,6 +2,7 @@ import SwiftUI
 
 public struct WHStack: View {
   @usableFromInline var alignment: VerticalAlignment
+  @usableFromInline var rowAlignment: HorizontalAlignment
   @usableFromInline var spacing: CGFloat
   @usableFromInline var rowSpacing: CGFloat?
   @usableFromInline let content: [AnyView]
@@ -9,11 +10,13 @@ public struct WHStack: View {
   
   @usableFromInline init(
     alignment: VerticalAlignment?,
+    rowAlignment: HorizontalAlignment?,
     spacing: CGFloat?,
     rowSpacing: CGFloat?,
     content: [AnyView]
   ) {
     self.alignment = alignment ?? .center
+    self.rowAlignment = rowAlignment ?? .leading
     self.spacing = spacing ?? 0
     self.rowSpacing = rowSpacing
     self.content = content
@@ -22,12 +25,14 @@ public struct WHStack: View {
   // Work-around for https://bugs.swift.org/browse/SR-11628
   @inlinable public init<Content: View>(
     alignment: VerticalAlignment? = nil,
+    rowAlignment: HorizontalAlignment? = nil,
     spacing: CGFloat? = nil,
     rowSpacing: CGFloat? = nil,
     content: () -> Content
   ) {
     self.init(
       alignment: alignment,
+      rowAlignment: rowAlignment,
       spacing: spacing,
       rowSpacing: rowSpacing,
       content: [AnyView(content())]
@@ -36,12 +41,14 @@ public struct WHStack: View {
 
   @inlinable public init<Content: View>(
     alignment: VerticalAlignment? = nil,
+    rowAlignment: HorizontalAlignment? = nil,
     spacing: CGFloat? = nil,
     rowSpacing: CGFloat? = nil,
     content: () -> [Content]
   ) {
     self.init(
       alignment: alignment,
+      rowAlignment: rowAlignment,
       spacing: spacing,
       rowSpacing: rowSpacing,
       content: content().map { AnyView($0) }
@@ -51,12 +58,14 @@ public struct WHStack: View {
   // Known issue: https://bugs.swift.org/browse/SR-11628
   @inlinable public init(
     alignment: VerticalAlignment? = nil,
+    rowAlignment: HorizontalAlignment? = nil,
     spacing: CGFloat? = nil,
     rowSpacing: CGFloat? = nil,
     @ViewArrayBuilder content: () -> [AnyView]
   ) {
     self.init(
       alignment: alignment,
+      rowAlignment: rowAlignment,
       spacing: spacing,
       rowSpacing: rowSpacing,
       content: content()
@@ -68,6 +77,7 @@ public struct WHStack: View {
       WrapStack (
         width: p.frame(in: .global).width,
         verticalAlignment: alignment,
+        horizontalAlignment: rowAlignment,
         spacing: spacing,
         laneSpacing: rowSpacing,
         content: content

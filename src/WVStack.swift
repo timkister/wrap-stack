@@ -2,6 +2,7 @@ import SwiftUI
 
 public struct WVStack: View {
   @usableFromInline var alignment: HorizontalAlignment
+  @usableFromInline var columnAlignment: VerticalAlignment
   @usableFromInline var spacing: CGFloat
   @usableFromInline var columnSpacing: CGFloat?
   @usableFromInline let content: [AnyView]
@@ -9,11 +10,13 @@ public struct WVStack: View {
 
   @usableFromInline init(
     alignment: HorizontalAlignment?,
+    columnAlignment: VerticalAlignment?,
     spacing: CGFloat?,
     columnSpacing: CGFloat?,
     content: [AnyView]
   ) {
     self.alignment = alignment ?? .center
+    self.columnAlignment = columnAlignment ?? .top
     self.spacing = spacing ?? 0
     self.columnSpacing = columnSpacing
     self.content = content
@@ -22,12 +25,14 @@ public struct WVStack: View {
   // Work-around for https://bugs.swift.org/browse/SR-11628
   @inlinable public init<Content: View>(
     alignment: HorizontalAlignment? = nil,
+    columnAlignment: VerticalAlignment? = nil,
     spacing: CGFloat? = nil,
     columnSpacing: CGFloat? = nil,
     content: () -> Content
   ) {
     self.init(
       alignment: alignment,
+      columnAlignment: columnAlignment,
       spacing: spacing,
       columnSpacing: columnSpacing,
       content: [AnyView(content())]
@@ -36,12 +41,14 @@ public struct WVStack: View {
   
   @inlinable public init<Content: View>(
     alignment: HorizontalAlignment? = nil,
+    columnAlignment: VerticalAlignment? = nil,
     spacing: CGFloat? = nil,
     columnSpacing: CGFloat? = nil,
     content: () -> [Content]
   ) {
     self.init(
       alignment: alignment,
+      columnAlignment: columnAlignment,
       spacing: spacing,
       columnSpacing: columnSpacing,
       content: content().map { AnyView($0) }
@@ -51,12 +58,14 @@ public struct WVStack: View {
   // Known issue: https://bugs.swift.org/browse/SR-11628
   @inlinable public init(
     alignment: HorizontalAlignment? = nil,
+    columnAlignment: VerticalAlignment? = nil,
     spacing: CGFloat? = nil,
     columnSpacing: CGFloat? = nil,
     @ViewArrayBuilder content: () -> [AnyView]
   ) {
     self.init(
       alignment: alignment,
+      columnAlignment: columnAlignment,
       spacing: spacing,
       columnSpacing: columnSpacing,
       content: content()
@@ -67,6 +76,7 @@ public struct WVStack: View {
     GeometryReader { p in
       WrapStack(
         height: p.frame(in: .global).height,
+        verticalAlignment: columnAlignment,
         horizontalAlignment: alignment,
         spacing: spacing,
         laneSpacing: columnSpacing,

@@ -69,7 +69,7 @@ struct WrapStack<Content: View>: View {
         content[$0]
       }
     }
-    .frame(maxWidth: .infinity, alignment: .leading)
+    .frame(maxWidth: .infinity, alignment: .init(horizontal: horizontalAlignment, vertical: .center))
     //.clipped()
   }
 
@@ -79,7 +79,7 @@ struct WrapStack<Content: View>: View {
         content[$0]
       }
     }
-    .frame(maxHeight: .infinity, alignment: .top)
+    .frame(maxHeight: .infinity, alignment: .init(horizontal: .center, vertical: verticalAlignment))
     //.clipped()
   }
 
