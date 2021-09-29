@@ -103,31 +103,37 @@ struct WVStack_Previews: PreviewProvider {
   }
   
   static var previews: some View {
-    Group {
-      WVStack(alignment: .center, spacing: 10) {[
-        Color.red.frame(width: 150, height: 100),
-        Color.green.frame(width: 50, height: 150),
-        Color.yellow.frame(width: 100, height: 150),
-        Color.orange.frame(width: 50, height: 50),
-        Color.purple.frame(width: 30, height: 50),
-        Color.blue.frame(width: 50, height: 50),
-        Color.gray.frame(width: 50, height: 50),
-        Color.green.frame(width: 50, height: 50),
-        Color.yellow.frame(width: 100, height: 150),
-        Color.orange.frame(width: 50, height: 50),
-        Color.purple.frame(width: 30, height: 50),
-        Color.red.frame(width: 150, height: 100),
-        Color.green.frame(width: 50, height: 150),
-        Color.yellow.frame(width: 100, height: 150),
-        Color.orange.frame(width: 50, height: 50),
-        Color.purple.frame(width: 30, height: 50),
-        Color.blue.frame(width: 50, height: 50),
-        Color.gray.frame(width: 50, height: 50),
-        Color.green.frame(width: 50, height: 50),
-        Color.blue.frame(width: 50, height: 50),
-        Color.gray.frame(width: 50, height: 50),
-        Color.green.frame(width: 50, height: 50),
-      ]}
+    let data: [(color: Color, width: CGFloat, height: CGFloat)] = [
+      (Color.red, width: 150, height: 100),
+      (Color.green, width: 50, height: 150),
+      (Color.yellow, width: 100, height: 150),
+      (Color.orange, width: 50, height: 50),
+      (Color.purple, width: 30, height: 50),
+      (Color.blue, width: 50, height: 50),
+      (Color.gray, width: 50, height: 50),
+      (Color.green, width: 50, height: 50),
+      (Color.yellow, width: 100, height: 150),
+      (Color.orange, width: 50, height: 50),
+      (Color.purple, width: 30, height: 50),
+      (Color.red, width: 150, height: 100),
+      (Color.green, width: 50, height: 150),
+      (Color.yellow, width: 100, height: 150),
+      (Color.orange, width: 50, height: 50),
+      (Color.purple, width: 30, height: 50),
+      (Color.blue, width: 50, height: 50),
+      (Color.gray, width: 50, height: 50),
+      (Color.green, width: 50, height: 50),
+      (Color.blue, width: 50, height: 50),
+      (Color.gray, width: 50, height: 50),
+      (Color.green, width: 50, height: 50),
+    ]
+
+    return Group {
+      WVStack(alignment: .center, spacing: 10) {
+          data.map {
+              $0.color.frame(width: $0.width, height: $0.height)
+          }
+      }
       //.frame(height: 350)
       .border(Color.black, width: 1)
 
