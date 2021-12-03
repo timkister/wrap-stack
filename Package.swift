@@ -2,7 +2,7 @@
 import PackageDescription
 
 let package = Package(
-  name: "SwiftUILib-WrapStack",
+  name: "SwiftUILib_WrapStack",
   platforms: [ .iOS(.v13), .macOS(.v10_15) ],
   products: [
     .library(
