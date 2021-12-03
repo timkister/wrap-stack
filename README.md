@@ -42,7 +42,7 @@ More info [in the docs](doc).
 
 In _XCode_ add the following URL to your project's _Swift Package_ dependencies:
 
- `https://github.com/swiftuilib/wrap-stack`
+ `https://github.com/swiftuilib/wrap-stack`lololol
 
 # Development
 
